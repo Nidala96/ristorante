@@ -32,12 +32,14 @@ public class PiattoService {
     public ResponseEntity<?> addPiatto(@AuthenticationPrincipal OidcUser principal, String nome, Set<Long> listaIngredientiId) {
         if(!ristoranteRepository.existsByEmail(principal.getEmail()))
             return  new ResponseEntity<>("nessun Ristorante con quella email", HttpStatus.NOT_FOUND);
-        Ristorante ristorante = ristoranteRepository.findByEmail(principal.getEmail());
+        Optional<Ristorante> ristorante = ristoranteRepository.findByEmail(principal.getEmail());
+        if(ristorante.isEmpty())
+            return  new ResponseEntity<>("Ristorante non ancora creato", HttpStatus.BAD_REQUEST);
         List<Ingrediente> listaIngredienti = ingredienteRepository.findAllById(listaIngredientiId);
         Set<Ingrediente> setIngredienti = new HashSet<>(listaIngredienti);
         Piatto piatto = new Piatto(nome, setIngredienti);
         piattoRepository.save(piatto);
-        ristorante.getListaPiatti().add(piatto);
+        ristorante.get().getListaPiatti().add(piatto);
         return new ResponseEntity<>("New piatto created", HttpStatus.CREATED);
     }
     @Transactional
@@ -47,7 +49,10 @@ public class PiattoService {
         Optional<Piatto> piatto = piattoRepository.findById(piattoId);
         if(piatto.isEmpty())
             return  new ResponseEntity<>("nessun piatto con quel id", HttpStatus.NOT_FOUND);
-        ristoranteRepository.findByEmail(principal.getEmail()).getListaPiatti().remove(piatto.get());
+        Optional<Ristorante> ristorante = ristoranteRepository.findByEmail(principal.getEmail());
+        if(ristorante.isEmpty())
+            return  new ResponseEntity<>("Ristorante non ancora creato", HttpStatus.BAD_REQUEST);
+        ristorante.get().getListaPiatti().remove(piatto.get());
         piattoRepository.deleteById(piattoId);
         return new ResponseEntity<>("Piatto eliminato", HttpStatus.OK);
     }

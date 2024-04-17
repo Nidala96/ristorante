@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -31,17 +32,21 @@ public class RistoranteService {
     }
 
     public ResponseEntity<?> getListaPiatti(OidcUser principal) {
-        Ristorante ristorante = ristoranteRepository.findByEmail(principal.getEmail());
-        return new ResponseEntity<>(ristorante.getListaPiatti(), HttpStatus.OK);
+        Optional<Ristorante> ristorante = ristoranteRepository.findByEmail(principal.getEmail());
+        if(ristorante.isEmpty())
+            return  new ResponseEntity<>("Ristorante non ancora creato", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ristorante.get().getListaPiatti(), HttpStatus.OK);
     }
 
     public ResponseEntity<?> getListaIngredienti(OidcUser principal) {
-        Set<Piatto> listaPiatti = ristoranteRepository.findByEmail(principal.getEmail()).getListaPiatti();
+        Optional<Ristorante> ristorante = ristoranteRepository.findByEmail(principal.getEmail());
+        if(ristorante.isEmpty())
+            return  new ResponseEntity<>("Ristorante non ancora creato", HttpStatus.BAD_REQUEST);
+        Set<Piatto> listaPiatti = ristorante.get().getListaPiatti();
         Set<Ingrediente> listaIngredienti = new HashSet<>();
         for(Piatto p : listaPiatti){
             listaIngredienti.addAll(p.getListaIngredienti());
         }
-
         return new ResponseEntity<>(listaIngredienti, HttpStatus.OK);
     }
 }

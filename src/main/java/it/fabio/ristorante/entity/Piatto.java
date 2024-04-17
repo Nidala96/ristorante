@@ -20,7 +20,7 @@ public class Piatto {
 
     private String nome;
 
-    @OneToMany(cascade = CascadeType.MERGE, orphanRemoval = true, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Ingrediente> listaIngredienti = new HashSet<>();
 
     public Piatto(String nome, Set<Ingrediente> listaIngredienti) {

@@ -15,7 +15,6 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.Set;
 
 
 @Service
@@ -43,7 +42,7 @@ public class IngredienteService {
         Optional<Ingrediente> ingrediente = ingredienteRepository.findById(ingredienteId);
         if(ingrediente.isEmpty())
             return  new ResponseEntity<>("nessun ingrediente con quel id", HttpStatus.NOT_FOUND);
-        piattoRepository.findBylistaIngredientiId(ingredienteId).getListaIngredienti().remove(ingrediente.get());
+        piattoRepository.findBylistaIngredientiId(ingredienteId).forEach(piatto -> piatto.getListaIngredienti().remove(ingrediente.get()));
         ingredienteRepository.deleteById(ingredienteId);
         return new ResponseEntity<>("Ingrediente eliminato", HttpStatus.OK);
     }
