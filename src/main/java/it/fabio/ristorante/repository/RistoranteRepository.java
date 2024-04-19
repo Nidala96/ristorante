@@ -14,5 +14,5 @@ public interface RistoranteRepository extends JpaRepository<Ristorante, Long> {
 
     Optional<Ristorante> findByEmail(String email);
 
-    void deleteBynomeRistorante(String utenteId);
+    void deleteBycodiceUtente(String utenteId);
 }

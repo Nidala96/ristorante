@@ -17,7 +17,7 @@ public class Ristorante {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String password;
+    private String codiceUtente;
 
     private String email;
 
@@ -26,15 +26,18 @@ public class Ristorante {
     @OneToMany(cascade = CascadeType.MERGE, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Piatto> listaPiatti = new HashSet<>();
 
-    public Ristorante(String email, String nomeRistorante, String password) {
+    public Ristorante(String email, String nomeRistorante, String codiceUtente) {
         this.email = email;
         this.nomeRistorante = nomeRistorante;
-        this.password = password;
+        this.codiceUtente = codiceUtente;
     }
 
     public Ristorante(Set<Piatto> listaPiatti) {
         this.listaPiatti = listaPiatti;
     }
+
+    @OneToMany(cascade = CascadeType.MERGE, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<Ingrediente> listaIngredienti = new HashSet<>();
 }
 
 

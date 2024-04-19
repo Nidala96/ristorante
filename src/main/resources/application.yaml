@@ -3,6 +3,7 @@ okta:
     issuer: https://dev-5um7h52037bdwgaf.eu.auth0.com/
     client-id: dNuKA5MOv8BeOnrWZzE99SNOvasjEXMz
     client-secret: _kc2rA7Di2a_j3ZkCwYqHsapZuRKn16r3XvAEyGK6ohnaypEZpT5Zt2Tzy3BTHD5
+    bearer-token: ${BEARER_TOKEN}
 
 server:
   port: 8081
@@ -60,6 +61,7 @@ spring-doc:
     enabled: true
     # hostname:port/swagger-ui.html => localhost:8081/swagger-ui.html
     path: /swagger-ui.html
+
 
 
 

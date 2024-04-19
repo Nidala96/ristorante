@@ -1,60 +1,57 @@
 package it.fabio.ristorante.configuration;
 
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.io.IOException;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+/**
+ * Configures our application with Spring Security to restrict access to our API endpoints.
+ */
 @Configuration
-@EnableWebSecurity
 public class SecurityConfig {
-
-    @Value("${okta.oauth2.issuer}")
-    private String issuer;
-    @Value("${okta.oauth2.client-id}")
-    private String clientId;
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+
     @Bean
-    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        http    .csrf((csrf) -> csrf.disable())
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/").permitAll()
-                        .anyRequest().authenticated()
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        /*
+        This is where we configure the security required for our endpoints and setup our app to serve as
+        an OAuth2 Resource Server, using JWT validation.
+        */
+        return http.csrf((csrf) -> csrf.disable())
+                .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/", "/auth/**","/auth","/v2/api-docs",
+                                "/v3/api-docs",
+                                "/v3/api-docs/**",
+                                "/swagger-resources",
+                                "/swagger-resources/**",
+                                "/configuration/ui",
+                                "/configuration/security",
+                                "/swagger-ui/**",
+                                "/webjars/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui.html/**").permitAll()
+                        .requestMatchers(
+                                "/public/**",
+                                "/{pathvariable:[0-9A-Za-z]+}/public/**",
+                                "/home/**").authenticated()
                 )
-                .oauth2Login(withDefaults())
-
-                // configure logout with Auth0
-                .logout(logout -> logout
-                        .addLogoutHandler(logoutHandler()));
-        return http.build();
+                .cors(withDefaults())
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(withDefaults())
+                )
+                .build();
     }
 
-
-
-    private LogoutHandler logoutHandler() {
-        return (request, response, authentication) -> {
-            try {
-                String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-                response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + baseUrl);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        };
-    }
 
 }

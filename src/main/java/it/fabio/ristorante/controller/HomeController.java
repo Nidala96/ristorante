@@ -7,8 +7,10 @@ import it.fabio.ristorante.service.IngredienteService;
 import it.fabio.ristorante.service.PiattoService;
 import it.fabio.ristorante.service.RistoranteService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +20,9 @@ import java.util.Set;
  * Controller for the home page.
  */
 @RestController
+@RequestMapping(path = "home")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class HomeController {
 
     private final RistoranteService ristoranteService;
@@ -38,8 +42,8 @@ public class HomeController {
             }
     )
     @PostMapping("/registra-ristorante")
-    public ResponseEntity<?> registraRistorante(@AuthenticationPrincipal OidcUser principal, String password) {
-        return ristoranteService.addRistorante(principal, password);
+    public ResponseEntity<?> registraRistorante(@AuthenticationPrincipal OidcUser principal, @RequestParam String nomeRistorante) {
+        return ristoranteService.addRistorante(principal, nomeRistorante);
     }
 
     @Operation(
@@ -120,19 +124,15 @@ public class HomeController {
     public ResponseEntity<?> eliminaPiatto(@AuthenticationPrincipal OidcUser principal, Long piattoId) {
         return piattoService.eliminaPiatto(principal, piattoId);
     }
-    @Operation(
-            description = "END POINT FOR DELETING USER",
-            summary = "Deleting user",
-            responses ={
-                    @ApiResponse(description = "User deleted successfully", responseCode = "204"),
-                    @ApiResponse(description = "BaD ReQuest", responseCode = "400"),
-            }
-    )
-    @DeleteMapping("/elimina-utente")
-    public ResponseEntity<?> eliminaUtente(String utenteId) {
-        return auth0Service.eliminaUtente(utenteId);
-    }
 
+    @GetMapping("/test")
+    public ResponseEntity<String> getSomeResource(OAuth2AuthenticationToken token) {
+        System.out.println(token.getPrincipal());
+        token.setAuthenticated(false);
+        System.out.println(token.getPrincipal());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied!");
+
+    }
 
 }
 
