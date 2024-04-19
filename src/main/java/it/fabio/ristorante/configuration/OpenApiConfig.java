@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 description = "OpenApi documentation for mini ristorante.",
                 title = "OpenApi specification - RISTORANTE",
                 version = "1.0",
-                termsOfService = "Terms of service"
+                summary = "Backend application made using Spring boot, Hibernate and Oauth2 for authentication"
         ),
         servers = {
                 @Server(

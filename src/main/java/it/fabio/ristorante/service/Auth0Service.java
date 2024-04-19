@@ -28,6 +28,7 @@ public class Auth0Service {
                 .header("Authorization", "Bearer " + secretKey)
                 .body("{\"client_id\":\"80f3Gluzp0UedkmDIyRY7hqbv8iHcoiJ\",\"client_secret\":\"eeyrM3VG99eI1bvfww6iCSTIyoYfZjB-_d3K86hyRB2QerzXCvNtZEfNg2jVR3TD\",\"audience\":\"https://dev-5um7h52037bdwgaf.eu.auth0.com/api/v2/\",\"grant_type\":\"client_credentials\"}")
                 .asString();
+        System.out.println(response.getBody());
         if(response.getStatus() == 204)
             ristoranteRepository.deleteBycodiceUtente(utenteId);
         return new ResponseEntity<>(response.getStatus(), HttpStatusCode.valueOf(response.getStatus()));

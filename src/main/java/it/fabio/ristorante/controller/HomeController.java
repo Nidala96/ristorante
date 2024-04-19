@@ -11,7 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.security.oauth2.core.OAuth2Token;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -38,7 +42,9 @@ public class HomeController {
             summary = "Creating RESTAURANT",
             responses ={
                     @ApiResponse(description = "Restaurant created successfully", responseCode = "201"),
-                    @ApiResponse(description = "BaD ReQuest", responseCode = "400"),
+                    @ApiResponse(description = "Bad Request", responseCode = "400"),
+                    @ApiResponse(description = "Not Authorized", responseCode = "401"),
+                    @ApiResponse(description = "Resource not found", responseCode = "404")
             }
     )
     @PostMapping("/registra-ristorante")
@@ -51,7 +57,9 @@ public class HomeController {
             summary = "Creating ingredient",
             responses ={
                     @ApiResponse(description = "Ingredient created successfully", responseCode = "201"),
-                    @ApiResponse(description = "BaD ReQuest", responseCode = "400"),
+                    @ApiResponse(description = "Bad Request", responseCode = "400"),
+                    @ApiResponse(description = "Not Authorized", responseCode = "401"),
+                    @ApiResponse(description = "Resource not found", responseCode = "404")
             }
     )
     @PostMapping("/aggiungi-ingrediente")
@@ -64,7 +72,9 @@ public class HomeController {
             summary = "Creating dish",
             responses ={
                     @ApiResponse(description = "Dish created successfully", responseCode = "201"),
-                    @ApiResponse(description = "BaD ReQuest", responseCode = "400"),
+                    @ApiResponse(description = "Bad Request", responseCode = "400"),
+                    @ApiResponse(description = "Not Authorized", responseCode = "401"),
+                    @ApiResponse(description = "Resource not found", responseCode = "404")
             }
     )
     @PutMapping("/aggiungi-piatto")
@@ -77,7 +87,9 @@ public class HomeController {
             summary = "List of dishes",
             responses ={
                     @ApiResponse(description = "List of dishes", responseCode = "200"),
-                    @ApiResponse(description = "BaD ReQuest", responseCode = "400"),
+                    @ApiResponse(description = "Bad Request", responseCode = "400"),
+                    @ApiResponse(description = "Not Authorized", responseCode = "401"),
+                    @ApiResponse(description = "Resource not found", responseCode = "404")
             }
     )
     @GetMapping("/lista-piatti")
@@ -91,12 +103,13 @@ public class HomeController {
             summary = "List of ingredients",
             responses ={
                     @ApiResponse(description = "List of ingredients", responseCode = "200"),
-                    @ApiResponse(description = "BaD ReQuest", responseCode = "400"),
+                    @ApiResponse(description = "Bad Request", responseCode = "400"),
+                    @ApiResponse(description = "Not Authorized", responseCode = "401")
             }
     )
     @GetMapping("/lista-ingredienti")
-    public ResponseEntity<?> listaIngredienti(@AuthenticationPrincipal OidcUser principal) {
-        return ristoranteService.getListaIngredienti(principal);
+    public ResponseEntity<?> listaIngredienti(OAuth2AuthenticationToken principal) {
+        return ristoranteService.getListaIngredienti(principal.getPrincipal());
     }
 
     @Operation(
@@ -104,7 +117,9 @@ public class HomeController {
             summary = "Deleting a ingredient",
             responses ={
                     @ApiResponse(description = "DELETING THE INGREDIENT", responseCode = "200"),
-                    @ApiResponse(description = "BaD ReQuest", responseCode = "400"),
+                    @ApiResponse(description = "Bad Request", responseCode = "400"),
+                    @ApiResponse(description = "Not Authorized", responseCode = "401"),
+                    @ApiResponse(description = "Resource not found", responseCode = "404")
             }
     )
     @DeleteMapping("/elimina-ingrediente")
@@ -117,11 +132,13 @@ public class HomeController {
             summary = "Deleting dish",
             responses ={
                     @ApiResponse(description = "Dish deleted successfully", responseCode = "204"),
-                    @ApiResponse(description = "BaD ReQuest", responseCode = "400"),
+                    @ApiResponse(description = "Bad Request", responseCode = "400"),
+                    @ApiResponse(description = "Not Authorized", responseCode = "401"),
+                    @ApiResponse(description = "Resource not found", responseCode = "404")
             }
     )
     @DeleteMapping("/elimina-piatto")
-    public ResponseEntity<?> eliminaPiatto(@AuthenticationPrincipal OidcUser principal, Long piattoId) {
+    public ResponseEntity<?> eliminaPiatto(@AuthenticationPrincipal OidcUser principal,@RequestParam Long piattoId) {
         return piattoService.eliminaPiatto(principal, piattoId);
     }
 

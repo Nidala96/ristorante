@@ -7,6 +7,8 @@ okta:
 
 server:
   port: 8081
+  tomcat:
+    relaxed-query-chars: '|,{,},[,],^'
 
 spring:
   application:
