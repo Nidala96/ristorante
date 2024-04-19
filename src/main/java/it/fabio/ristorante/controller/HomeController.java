@@ -2,16 +2,14 @@ package it.fabio.ristorante.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import it.fabio.ristorante.service.Auth0Service;
 import it.fabio.ristorante.service.IngredienteService;
 import it.fabio.ristorante.service.PiattoService;
 import it.fabio.ristorante.service.RistoranteService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -23,6 +21,7 @@ import java.util.Set;
 @RequestMapping(path = "home")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
+@Validated
 public class HomeController {
 
     private final RistoranteService ristoranteService;
@@ -31,7 +30,6 @@ public class HomeController {
 
     private final IngredienteService ingredienteService;
 
-    private final Auth0Service auth0Service;
 
     @Operation(
             description = "END POINT FOR ADDING A RESTAURANT",
@@ -42,7 +40,7 @@ public class HomeController {
             }
     )
     @PostMapping("/registra-ristorante")
-    public ResponseEntity<?> registraRistorante(@AuthenticationPrincipal OidcUser principal, @RequestParam String nomeRistorante) {
+    public ResponseEntity<?> registraRistorante(@AuthenticationPrincipal UserDetails principal, @RequestParam String nomeRistorante) {
         return ristoranteService.addRistorante(principal, nomeRistorante);
     }
 
@@ -55,7 +53,7 @@ public class HomeController {
             }
     )
     @PostMapping("/aggiungi-ingrediente")
-    public ResponseEntity<?> aggiungiIngrediente(@AuthenticationPrincipal OidcUser principal, String descrizione) {
+    public ResponseEntity<?> aggiungiIngrediente(@AuthenticationPrincipal UserDetails principal, String descrizione) {
         return ingredienteService.addIngrediente(principal, descrizione);
     }
 
@@ -68,7 +66,7 @@ public class HomeController {
             }
     )
     @PutMapping("/aggiungi-piatto")
-    public ResponseEntity<?> aggiungiPiatto(@AuthenticationPrincipal OidcUser principal, String nome,@RequestParam Set<Long> ingredienti) {
+    public ResponseEntity<?> aggiungiPiatto(@AuthenticationPrincipal UserDetails principal, String nome,@RequestParam Set<Long> ingredienti) {
         return piattoService.addPiatto(principal, nome, ingredienti);
     }
 
@@ -81,8 +79,7 @@ public class HomeController {
             }
     )
     @GetMapping("/lista-piatti")
-    public ResponseEntity<?> listaPiatti(@AuthenticationPrincipal OidcUser principal) {
-        System.out.println(principal.getIdToken());
+    public ResponseEntity<?> listaPiatti(@AuthenticationPrincipal UserDetails principal) {
         return ristoranteService.getListaPiatti(principal);
     }
 
@@ -95,7 +92,7 @@ public class HomeController {
             }
     )
     @GetMapping("/lista-ingredienti")
-    public ResponseEntity<?> listaIngredienti(@AuthenticationPrincipal OidcUser principal) {
+    public ResponseEntity<?> listaIngredienti(@AuthenticationPrincipal UserDetails principal) {
         return ristoranteService.getListaIngredienti(principal);
     }
 
@@ -108,7 +105,7 @@ public class HomeController {
             }
     )
     @DeleteMapping("/elimina-ingrediente")
-    public ResponseEntity<?> eliminaIngrediente(@AuthenticationPrincipal OidcUser principal, Long ingredienteId) {
+    public ResponseEntity<?> eliminaIngrediente(@AuthenticationPrincipal UserDetails principal, Long ingredienteId) {
         return ingredienteService.eliminaIngrediente(principal, ingredienteId);
     }
 
@@ -121,17 +118,8 @@ public class HomeController {
             }
     )
     @DeleteMapping("/elimina-piatto")
-    public ResponseEntity<?> eliminaPiatto(@AuthenticationPrincipal OidcUser principal, Long piattoId) {
+    public ResponseEntity<?> eliminaPiatto(@AuthenticationPrincipal UserDetails principal, Long piattoId) {
         return piattoService.eliminaPiatto(principal, piattoId);
-    }
-
-    @GetMapping("/test")
-    public ResponseEntity<String> getSomeResource(OAuth2AuthenticationToken token) {
-        System.out.println(token.getPrincipal());
-        token.setAuthenticated(false);
-        System.out.println(token.getPrincipal());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied!");
-
     }
 
 }

@@ -12,9 +12,10 @@
 	<artifactId>ristorante</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ristorante</name>
-	<description>Progetto ristorante </description>
+	<description>Progetto ristorante JWT</description>
 	<properties>
 		<java.version>17</java.version>
+		<jjwt>0.11.5</jjwt>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -48,6 +49,22 @@
 			<groupId>com.konghq</groupId>
 			<artifactId>unirest-java</artifactId>
 			<version>3.14.5</version>
+		</dependency>
+		<!-- JWT -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>${jjwt}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>${jjwt}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>${jjwt}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
