@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -39,14 +40,20 @@ public class RistoranteService {
     }
 
     public ResponseEntity<?> getListaPiatti(OidcUser principal) {
+        if(!checkUtente(principal))
+            return new ResponseEntity<>("Utente con quel'email non esiste", HttpStatus.NOT_FOUND);
         Optional<Ristorante> ristorante = ristoranteRepository.findByEmail(principal.getEmail());
         if (ristorante.isEmpty())
             return new ResponseEntity<>("Ristorante non ancora creato", HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(ristorante.get().getListaPiatti(), HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getListaIngredienti(OidcUser principal) {
-        Optional<Ristorante> ristorante = ristoranteRepository.findByEmail(principal.getEmail());
+    public ResponseEntity<?> getListaIngredienti(OAuth2User principal) {
+//        System.out.println(principal.getIdToken().getTokenValue());
+//        System.out.println(principal);
+//        if(!checkUtente(principal))
+//            return new ResponseEntity<>("Utente con quel'email non esiste", HttpStatus.NOT_FOUND);
+        Optional<Ristorante> ristorante = ristoranteRepository.findByEmail(principal.getAttribute("email"));
         if (ristorante.isEmpty())
             return new ResponseEntity<>("Ristorante non ancora creato", HttpStatus.BAD_REQUEST);
         Set<Ingrediente> listaIngredienti= ristorante.get().getListaIngredienti();

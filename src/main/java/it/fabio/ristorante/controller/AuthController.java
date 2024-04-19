@@ -9,6 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,11 +24,12 @@ public class AuthController {
             summary = "Deleting user",
             responses ={
                     @ApiResponse(description = "User deleted successfully", responseCode = "204"),
-                    @ApiResponse(description = "BaD ReQuest", responseCode = "400"),
+                    @ApiResponse(description = "Bad request", responseCode = "400"),
+                    @ApiResponse(description = "Invalid token.", responseCode = "401")
             }
     )
     @DeleteMapping("/elimina-utente")
-    public ResponseEntity<?> eliminaUtente(String utenteId, @AuthenticationPrincipal OidcUser principal) {
+    public ResponseEntity<?> eliminaUtente(@RequestParam String utenteId, @AuthenticationPrincipal OidcUser principal) {
         return auth0Service.eliminaUtente(utenteId, principal);
     }
 }
