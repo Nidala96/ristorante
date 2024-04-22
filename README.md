@@ -5,19 +5,19 @@ This project implements a set of REST APIs for simplified restaurant management,
 
 Restaurant Registration:
 - Endpoint: POST /api/restaurant
-- Parameters: id, email, password, restaurant name
+- Parameters: id, email, restaurant name
 ### OAuth2 Login:
 - Endpoint: POST /api/login
 - Parameters: email, password
 ### Authenticated User-only APIs:
-- Create a new ingredient: POST /api/ingredients
-- Create a new dish: POST /api/dishes
-- Get the list of ingredients: GET /api/ingredients
-- Get the list of dishes: GET /api/dishes
-- Delete an ingredient: DELETE /api/ingredients/{id}
-- Delete a dish: DELETE /api/dishes/{id}
+- Create a new ingredient: POST /home/aggiungi-ingrediente
+- Create a new dish: POST /home/aggiungi-piatto
+- Get the list of ingredients: GET /home/lista-ingredienti
+- Get the list of dishes: GET /home/lista-piatti
+- Delete an ingredient: DELETE /home/elimina-ingrediente
+- Delete a dish: DELETE /home/elimina-piatto
 - Public API:
-- vDelete a user: DELETE /api/users/{id}
+- vDelete a user: DELETE localhost:8081/auth/delete-utente
 #### Note: Deleting a user will result in the deletion of all associated ingredients and dishes.
 
 ## Branches:
