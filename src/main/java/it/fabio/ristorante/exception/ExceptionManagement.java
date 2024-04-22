@@ -5,27 +5,44 @@ import jakarta.validation.ConstraintViolationException;
 import org.hibernate.query.SemanticException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class ExceptionManagement {
+
+    public ExceptionManagement() {
+        System.out.println("ExceptionManagement bean instantiated.");
+    }
 
     @ExceptionHandler({MethodArgumentTypeMismatchException.class})
     public ResponseEntity<String> methodArgumentTypeMismatchExceptionManagement(MethodArgumentTypeMismatchException ex){
         return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({NoSuchElementException.class})
+    public ResponseEntity<String> noSuchElementException(NoSuchElementException ex){
+        return new ResponseEntity<String>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+
     @ExceptionHandler({ResourceNotFoundException.class})
     public ResponseEntity<String> resourceNotFoundExceptionManagement(ResourceNotFoundException ex){
         return new ResponseEntity<String>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<String> handleUsernameNotFoundException(UsernameNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
     @ExceptionHandler({SemanticException.class})

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +30,7 @@ public class HomeController {
     private final PiattoService piattoService;
 
     private final IngredienteService ingredienteService;
+
 
 
     @Operation(
@@ -80,7 +82,11 @@ public class HomeController {
     )
     @GetMapping("/lista-piatti")
     public ResponseEntity<?> listaPiatti(@AuthenticationPrincipal UserDetails principal) {
-        return ristoranteService.getListaPiatti(principal);
+        try {
+            return ristoranteService.getListaPiatti(principal);
+        } catch (UsernameNotFoundException e) {
+            return null;
+        }
     }
 
     @Operation(

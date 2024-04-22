@@ -1,7 +1,6 @@
 package it.fabio.ristorante.service;
 
 import it.fabio.ristorante.entity.Ingrediente;
-import it.fabio.ristorante.entity.Piatto;
 import it.fabio.ristorante.entity.Ristorante;
 import it.fabio.ristorante.entity.Utente;
 import it.fabio.ristorante.exception.ResourceNotFoundException;
@@ -11,9 +10,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
