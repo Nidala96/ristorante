@@ -38,7 +38,9 @@ public class HomeController {
             summary = "Creating RESTAURANT",
             responses ={
                     @ApiResponse(description = "Restaurant created successfully", responseCode = "201"),
-                    @ApiResponse(description = "BaD ReQuest", responseCode = "400"),
+                    @ApiResponse(description = "Bad Request", responseCode = "400"),
+                    @ApiResponse(description = "Not Authorized", responseCode = "401"),
+                    @ApiResponse(description = "Resource not found", responseCode = "404")
             }
     )
     @PostMapping("/registra-ristorante")
@@ -51,7 +53,9 @@ public class HomeController {
             summary = "Creating ingredient",
             responses ={
                     @ApiResponse(description = "Ingredient created successfully", responseCode = "201"),
-                    @ApiResponse(description = "BaD ReQuest", responseCode = "400"),
+                    @ApiResponse(description = "Bad Request", responseCode = "400"),
+                    @ApiResponse(description = "Not Authorized", responseCode = "401"),
+                    @ApiResponse(description = "Resource not found", responseCode = "404")
             }
     )
     @PostMapping("/aggiungi-ingrediente")
@@ -64,10 +68,12 @@ public class HomeController {
             summary = "Creating dish",
             responses ={
                     @ApiResponse(description = "Dish created successfully", responseCode = "201"),
-                    @ApiResponse(description = "BaD ReQuest", responseCode = "400"),
+                    @ApiResponse(description = "Bad Request", responseCode = "400"),
+                    @ApiResponse(description = "Not Authorized", responseCode = "401"),
+                    @ApiResponse(description = "Resource not found", responseCode = "404")
             }
     )
-    @PutMapping("/aggiungi-piatto")
+    @PostMapping("/aggiungi-piatto")
     public ResponseEntity<?> aggiungiPiatto(@AuthenticationPrincipal UserDetails principal, String nome,@RequestParam Set<Long> ingredienti) {
         return piattoService.addPiatto(principal, nome, ingredienti);
     }
@@ -77,7 +83,9 @@ public class HomeController {
             summary = "List of dishes",
             responses ={
                     @ApiResponse(description = "List of dishes", responseCode = "200"),
-                    @ApiResponse(description = "BaD ReQuest", responseCode = "400"),
+                    @ApiResponse(description = "Bad Request", responseCode = "400"),
+                    @ApiResponse(description = "Not Authorized", responseCode = "401"),
+                    @ApiResponse(description = "Resource not found", responseCode = "404")
             }
     )
     @GetMapping("/lista-piatti")
@@ -94,7 +102,8 @@ public class HomeController {
             summary = "List of ingredients",
             responses ={
                     @ApiResponse(description = "List of ingredients", responseCode = "200"),
-                    @ApiResponse(description = "BaD ReQuest", responseCode = "400"),
+                    @ApiResponse(description = "Bad Request", responseCode = "400"),
+                    @ApiResponse(description = "Not Authorized", responseCode = "401")
             }
     )
     @GetMapping("/lista-ingredienti")
@@ -103,11 +112,13 @@ public class HomeController {
     }
 
     @Operation(
-            description = "END POINT FOR DELETING A INGREDIENT",
-            summary = "Deleting a ingredient",
+            description = "END POINT FOR DELETING DISH",
+            summary = "Deleting dish",
             responses ={
-                    @ApiResponse(description = "DELETING THE INGREDIENT", responseCode = "200"),
-                    @ApiResponse(description = "BaD ReQuest", responseCode = "400"),
+                    @ApiResponse(description = "Dish deleted successfully", responseCode = "204"),
+                    @ApiResponse(description = "Bad Request", responseCode = "400"),
+                    @ApiResponse(description = "Not Authorized", responseCode = "401"),
+                    @ApiResponse(description = "Resource not found", responseCode = "404")
             }
     )
     @DeleteMapping("/elimina-ingrediente")
